@@ -1,0 +1,11 @@
+body {
+  -webkit-font-smoothing: none;
+  background: url(./photo/gray.jpg) top left;
+  background-position-x: left;
+  background-position-y: top;
+  background-size: initial;
+  background-repeat: initial;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+}

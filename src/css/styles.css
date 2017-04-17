@@ -1,0 +1,67 @@
+ body {
+  -webkit-font-smoothing: none;
+  background: url(/app/photo/gray.jpg) top left;
+  background-position-x: left;
+  background-position-y: top;
+  background-size: initial;
+  background-repeat: initial;
+  background-attachment: initial;
+  background-origin: initial;
+  background-clip: initial;
+}
+ td.tableButtons {
+   border: 0px;
+   border-style: hidden;
+   border-right-style: hidden;
+   width: 1px;
+   white-space: nowrap;
+ }
+
+ tbody>tr:hover {
+   background-color: lightblue;
+ }
+
+ .sortHead:hover {
+   background-color: darkgray;
+ }
+
+.module_5tape{
+  background-size: cover;
+ width: 200px;
+  height: 200px;
+  padding : 4px;
+}
+
+.module_tape{
+  background-size: cover;
+  width: 200px;
+  height: 200px;
+  padding : 4px;
+}
+
+.module_tape{
+  background-size: cover;
+  width: 203px;
+  height: 200px;
+  padding : 4px;
+}
+
+.module_tape_above{
+  
+  background-size: cover;
+  width: 30%;
+  height: 200px;
+  
+}
+
+.module_5tape:hover{
+  
+  background-size: cover;
+  width: 30%;
+  height: 205px;
+  width: 205px;
+}
+
+div.neon{
+  text-align: center;
+}

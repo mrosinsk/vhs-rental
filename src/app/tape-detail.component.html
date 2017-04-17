@@ -1,0 +1,11 @@
+<div *ngIf="tape">
+  <h2>{{tape.title}} details!</h2>
+  <div><label>id: </label>{{tape.id}}</div>
+  <div><label>date: </label>{{tape.date}}</div>
+  <div><label>rating: </label>{{tape.rating}}</div>
+  <div><label>description: </label>{{tape.description}}</div>
+  <div><img src={{tape.photo}}></div>
+  <br/>
+  <button (click)="goBack()">Back</button>
+  <br/>
+</div>

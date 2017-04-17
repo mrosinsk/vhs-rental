@@ -1,0 +1,92 @@
+<div class="container">
+  <h2>Tapes rented:</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <!--"ngModel" - umożliwia dual-binding, czyli wiązanie pliku HTML z komponentem za pomocą zmiennej "idSearch" tworzonej w komponencie,
+         "keyup" - wywołuje metode getTypes() po każdym zwolnieniu klwaisza-->
+        <th><input type="text" [(ngModel)]="idSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="titleSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="relaseDateSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="categorySearch" (keyup)="getTapes()"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+      </tr>
+      <tr>
+        <th class="sortHead" (click)="byId(); getTapes()"> Id
+          <span *ngIf="sortByField == 'id' && byIdDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'id' && byIdDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byTitle(); getTapes()">Title
+          <span *ngIf="sortByField == 'title' && byTitleDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'title' && byTitleDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byDate(); getTapes()">Release date
+          <span *ngIf="sortByField == 'date' && byDateDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'date' && byDateDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byCategory(); getTapes()">Category
+          <span *ngIf="sortByField == 'category' && byCategoryDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'category' && byCategoryDescending == true"> &darr;</span>
+        </th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let tape of tapes" [class.selected]="tape === selectedTape">
+      <tr [class.selected]="tape === selectedTape">
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.id}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.title}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.date}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.category}}</td>
+        <button type="button" data-toggle="modal" data-target="#returnModal" (click)="returnTape(tape);">Return</button>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--Return - okienko modalne -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="returnModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Return tape {{selectedTape.title}}</h4>
+        </div>
+        <div class="modal-body">
+
+          <!--formularz zwracania flmu-->
+          <form (ngSubmit)="onSubmit()" #tapeForm="ngForm">
+            {{diagnostic}}
+
+            <div class="form-group">
+              <input type="checkbox" id="isBroken" [(ngModel)]="payment.broken" name="broken" (change)="calculate()" /> Tape
+              is broken
+            </div>
+            <div class="form-group">
+              <input type="checkbox" id="isRewind" [(ngModel)]="payment.rewind" name="rewind" (change)="calculate()" /> Tape
+              is rewind
+            </div>
+            <div class="form-group">
+              <input type="checkbox" id="isDelay" [(ngModel)]="payment.delay" name="delay" (change)="calculate()" /> Tape
+              is delay
+            </div>
+
+            <label>To pay: {{payment.sum}}$</label>
+            <!--formularz zwracania flmu-->
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" (click)="tapeForm.reset()">Paid</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Return - okienko modalne -->

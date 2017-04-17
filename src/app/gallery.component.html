@@ -1,0 +1,27 @@
+
+  <h3>5-stars Tapes</h3>
+  <div class="grid grid-pad">
+    <div *ngFor="let tape of tapes" style="padding: 0px">
+      <div style="padding : 4px" *ngIf="tape.rating == 5" class="col-1-4">
+        <div class="module_5tape" [ngStyle]="{'background-image':'url(' + tape.photo + ')'}" [routerLink]="['/detail', tape.id]">
+          <h4 style="opacity: 0.7; background-color: bisque; text-align: center">{{tape.title}}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div style="clear: both;">
+    <br/>
+    <h3>All Tapes</h3>
+    <div class="grid grid-pad">
+
+      <div class="module_tape_above" *ngFor="let tape of tapes" class="col-1-4">
+        <div class="module_tape" [routerLink]="['/detail', tape.id]" [ngStyle]="{'background-image':'url(' + tape.photo + ')'}">
+          <h4 style="opacity: 0.7; background-color: bisque; text-align: center">{{tape.title}}</h4>
+        </div>
+
+      </div>
+    </div>
+  </div>
+

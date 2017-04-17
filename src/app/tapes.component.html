@@ -1,0 +1,195 @@
+<div class="container">
+  <h2>{{pageName}}</h2>
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <!--(keyup)="getTapes() nacisniecie jakiegokolwiek przycisku, napisanie znaku w tym inpucie powoduje wywolanie metody getTapes(), ktora filtruje i sortuje dane-->
+        <th><input type="text" [(ngModel)]="idSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="titleSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="relaseDateSearch" (keyup)="getTapes()"></th>
+        <th><input type="text" [(ngModel)]="categorySearch" (keyup)="getTapes()"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+      </tr>
+      <tr>
+        <th class="sortHead" (click)="byId(); getTapes()"> Id
+          <span *ngIf="sortByField == 'id' && byIdDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'id' && byIdDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byTitle(); getTapes()">Title
+          <span *ngIf="sortByField == 'title' && byTitleDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'title' && byTitleDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byDate(); getTapes()">Release date
+          <span *ngIf="sortByField == 'date' && byDateDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'date' && byDateDescending == true"> &darr;</span>
+        </th>
+        <th class="sortHead" (click)="byCategory(); getTapes()">Category
+          <span *ngIf="sortByField == 'category' && byCategoryDescending == false"> &uarr; </span>
+          <span *ngIf="sortByField == 'category' && byCategoryDescending == true"> &darr;</span>
+        </th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+        <th class="tableButtons"></th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let tape of tapes" [class.selected]="tape === selectedTape">
+      <tr [class.selected]="tape === selectedTape">
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.id}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.title}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.date}}</td>
+        <td (click)="onSelect(tape); gotoDetail()">{{tape.category}}</td>
+        <td (click)="onSelect(tape)" class="tableButtons"><button type="button" data-toggle="modal" data-target="#editModal">Edit</button></td>
+        <td (click)="onSelect(tape)" class="tableButtons"><button (click)="delete(tape); $event.stopPropagation()">delete</button></td>
+        <td (click)="onSelect(tape)" class="tableButtons"><button (click)="rent(tape); $event.stopPropagation()">rent</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!--Add New Tape - okienko modalne -->
+<div class="container">
+  <!-- Trigger the modal with a button -->
+  <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addModal" (click)='tapeFormAdd.reset();'>Add new Tape</button>
+  <!-- Modal -->
+  <div class="modal fade" id="addModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Add new Tape</h4>
+        </div>
+        <div class="modal-body">
+          <p>Complete the data to add a new tape</p>
+          <!--formularz dodawania nowego flmu-->
+          <form (ngSubmit)="onSubmit()" #tapeFormAdd="ngForm">
+            {{diagnostic}}
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9]{1}(([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9])|(\s)){0,19}$" type="text" class="form-control"
+                id="title" required [(ngModel)]="model.title" name="title" #titleAdd="ngModel">
+              <div [hidden]="titleAdd.valid && titleAdd.dirty" class="alert alert-danger">
+                Title is mandatory and can contain up to 20 singns
+              </div>
+
+            </div>
+            <div class="form-group">
+              <label for="date">date rrrr.mm.dd</label>
+              <input pattern="^[1-9][0-9]{3}\.((0[1-9])|(1[0-2]))\.((0[1-9])|([1-2][0-9])|(3[0-2]))$" type="text" class="form-control"
+                id="date" required [(ngModel)]="model.date" name="date" #dateAdd="ngModel">
+              <div [hidden]="dateAdd.valid && dateAdd.dirty" class="alert alert-danger">
+                Date is mandatory and correct format (rrrr.mm.dd)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="categoryAdd">Category</label>
+              <input pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{1}([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]|(\s)){0,9}$" type="text" class="form-control" id="categoryAdd"
+                required [(ngModel)]="model.category" name="categoryAdd" #categoryAdd="ngModel">
+              <div [hidden]="categoryAdd.valid && categoryAdd.dirty" class="alert alert-danger">
+                Category is mandatory and can contain up to 10 singns
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">description</label>
+              <textarea rows="4" pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9]{1}(([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9])|(\s)){0,400}$" type="text" class="form-control"
+                id="description" required [(ngModel)]="model.description" name="description" #descriptionAdd="ngModel"> </textarea>
+            </div>
+            <div [hidden]="descriptionAdd.valid && descriptionAdd.dirty" class="alert alert-danger">
+              Description is mandatory
+            </div>
+
+            <div [hidden]="titleAdd.invalid && !titleAdd.dirty || dateAdd.invalid && !dateAdd.dirty || categoryAdd.invalid && !categoryAdd.dirty || descriptionAdd.invalid && !descriptionAdd.dirty">
+              <button type="button" class="btn btn-default" data-dismiss="modal" (click)='createNewTape();'>Add</button>
+            </div>
+          </form>
+          <!--koniec formularza dodawania nowego filmu-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Add New Tape - okienko modalne -->
+
+<!--Edit - okienko modalne -->
+<div class="container">
+  <!-- Modal -->
+  <div class="modal fade" id="editModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit {{selectedTape.title}}</h4>
+        </div>
+        <div class="modal-body">
+          <!--formularz edytowania nowego flmu-->
+          <form (ngSubmit)="onSubmit()" #tapeForm="ngForm">
+            {{diagnostic}}
+            <div class="form-group">
+              <label for="title">Title</label>
+              <input pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9]{1}(([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9])|(\s)){0,19}$" type="text" class="form-control" id="title"
+                required [(ngModel)]="selectedTape.title" name="title" #title="ngModel" value="{{selectedTape.title}}">
+              <div [hidden]="title.valid || title.pristine" class="alert alert-danger">
+                Title is mandatory and can contain up to 20 singns
+              </div>
+
+            </div>
+
+            <div class="form-group">
+              <label for="date">date rrrr.mm.dd</label>
+              <input pattern="^[1-9][0-9]{3}\.((0[1-9])|(1[0-2]))\.((0[1-9])|([1-2][0-9])|(3[0-2]))$" id="date" type="text" class="form-control"
+                required [(ngModel)]="selectedTape.date" name="date" #date="ngModel" value="{{selectedTape.date}}">
+              <div [hidden]="date.valid || date.pristine" class="alert alert-danger">
+                Date is mandatory and correct format (rrrr.mm.dd)
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="category">Category</label>
+              <input pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]{1}([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ]|(\s)){0,9}$" type="text" class="form-control" id="categoryAdd"
+                required [(ngModel)]="selectedTape.category" name="category" #category="ngModel">
+              <div [hidden]="category.valid || category.pristine" class="alert alert-danger">
+                Category is mandatory and can contain up to 10 singns
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="rating">rating</label>
+              <input pattern="^[1-5]$" type="text" class="form-control" id="rating" required [(ngModel)]="selectedTape.rating" name="rating"
+                #rating="ngModel" value="{{selectedTape.rating}}">
+              <div [hidden]="rating.valid || rating.pristine" class="alert alert-danger">
+                Rating is mandatory and need to be number 1-5
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="description">description</label>
+              <textarea rows="4" pattern="^[a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9]{1}(([a-zA-ZąćęłńóśźżĄĘŁŃÓŚŹŻ0-9])|(\s)){0,400}$" type="text" class="form-control"
+                id="description" required [(ngModel)]="selectedTape.description" name="description" #description="ngModel"
+                value="{{selectedTape.description}}"></textarea>
+              <div [hidden]="description.valid || description.pristine" class="alert alert-danger">
+                Description is mandatory
+              </div>
+
+            </div>
+            <div [hidden]="!title.valid && !title.pristine || !date.valid && !date.pristine || !rating.valid && !rating.pristine || !description.valid && !description.pristine || !category.valid && !category.pristine">
+              <button type="button" class="btn btn-default" (click)="editTape();  tapeForm.reset()" data-dismiss="modal">Edit</button>
+            </div>
+          </form>
+          <!--koniec formularza edytowania nowego filmu-->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" (click)="getTapes()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Edit - okienko modalne -->
